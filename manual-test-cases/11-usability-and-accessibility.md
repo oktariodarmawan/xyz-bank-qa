@@ -1,0 +1,15 @@
+# Module 11 — Usability and accessibility
+
+These checks are subjective or require a human judgement call (contrast, wording, keyboard
+flow), so they are manual-only by nature rather than gaps in the automation. None of them have
+been executed yet — none should be reported as pass/fail until a tester actually runs them.
+
+| Test Case ID | Test Description | Preconditions | Test Steps | Expected Result | Actual Result | Priority | Automation Feasibility |
+|---|---|---|---|---|---|---|---|
+| TC-UX-001 | Every interactive control has an accessible name | Any page with buttons/inputs/selects | 1. Use a screen reader or the browser's accessibility inspector on each control.<br>2. Check the announced name. | Every button, input, and dropdown has a meaningful accessible name (not "button" or blank). | Not executed — pending manual QA | Medium | Manual only — accessibility audit |
+| TC-UX-002 | Controls have a visible focus state | Any page with interactive controls | 1. Tab through the page using the keyboard only. | Each focused control shows a clear visible focus indicator (outline/highlight). | Not executed — pending manual QA | Medium | Manual only — visual/keyboard review |
+| TC-UX-003 | Full flows are operable by keyboard alone | Homepage | 1. Using only Tab/Shift+Tab/Enter/Space/Arrow keys, complete: role selection → customer login → deposit.<br>2. Repeat for the manager add-customer flow. | Every step is reachable and operable without a mouse. | Not executed — pending manual QA | Medium | Manual only — keyboard-navigation review |
+| TC-UX-004 | Success and error feedback is understandable and legible | Any action producing a success/error message (deposit, withdraw, add customer) | 1. Trigger each type of feedback.<br>2. Judge clarity of wording and legibility (contrast, size). | Message text plainly states what happened; contrast and size are sufficient to read at a glance. | Not executed — pending manual QA | Medium | Manual only — subjective UX review |
+| TC-UX-005 | Feedback does not disappear before it can be read | Any success/error message | 1. Trigger a message.<br>2. Time how long it stays visible/interactable. | Message remains visible long enough for a typical user to read it (not an instant flash). | Not executed — pending manual QA | Low | Manual only — timing-based UX review |
+| TC-UX-006 | Currency and numeric values use consistent formatting | Account overview, across multiple accounts/currencies | 1. Compare balance formatting across Dollar, Pound, and Rupee accounts. | Formatting (decimal places, grouping) is consistent and never loses precision. | Not executed — pending manual QA | Low | Manual only — visual/formatting review |
+| TC-UX-007 | Browser back button does not expose stale customer information | Logged in as a customer, then logged out | 1. Log out.<br>2. Use the browser Back button. | The previous customer's balance/account data is not visible after going back post-logout. | Not executed — pending manual QA | High | Manual only — needs a real browser back-button interaction, not simulated navigation |

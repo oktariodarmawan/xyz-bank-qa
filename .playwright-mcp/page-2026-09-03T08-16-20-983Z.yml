@@ -1,0 +1,20 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - button "Home" [ref=e5] [cursor=pointer]
+    - strong [ref=e6]: XYZ Bank
+  - generic [ref=e1651]:
+    - generic [ref=e1652]:
+      - button "Add Customer" [active] [ref=e1653] [cursor=pointer]
+      - button "Open Account" [ref=e1654] [cursor=pointer]
+      - button "Customers" [ref=e1655] [cursor=pointer]
+    - form [ref=e1660]:
+      - generic [ref=e1661]:
+        - generic [ref=e1662]: "First Name :"
+        - textbox "First Name" [ref=e1663]
+      - generic [ref=e1664]:
+        - generic [ref=e1665]: "Last Name :"
+        - textbox "Last Name" [ref=e1666]
+      - generic [ref=e1667]:
+        - generic [ref=e1668]: "Post Code :"
+        - textbox "Post Code" [ref=e1669]
+      - button "Add Customer" [ref=e1670] [cursor=pointer]

@@ -1,0 +1,14 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - button "Home" [ref=e5] [cursor=pointer]
+    - strong [ref=e6]: XYZ Bank
+  - form [ref=e35]:
+    - generic [ref=e36]:
+      - generic [ref=e37]: "Your Name :"
+      - combobox [ref=e38]:
+        - option "---Your Name---" [selected]
+        - option "Hermoine Granger"
+        - option "Harry Potter"
+        - option "Ron Weasly"
+        - option "Albus Dumbledore"
+        - option "Neville Longbottom"

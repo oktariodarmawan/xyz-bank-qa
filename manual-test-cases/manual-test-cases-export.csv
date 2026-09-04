@@ -1,0 +1,182 @@
+﻿Module,Test Case ID,Test Description,Preconditions,Test Steps,Expected Result,Actual Result,Priority,Automation Feasibility
+Module 1 — Login and role selection,TC-LOGIN-001,Homepage shows both login options,"Browser open, no prior session","1. Navigate to the site URL.
+2. Observe the page title and the buttons available.","Page title is ""XYZ Bank"". ""Customer Login"" and ""Bank Manager Login"" buttons are visible, plus a ""Home"" button.",Pass — automated,High,Automated — tests/landing-page.spec.ts (TC-LOGIN-001)
+Module 1 — Login and role selection,TC-LOGIN-002,Home button returns to the homepage from a logged-in state,Logged in as a customer,"1. While on the account page, click ""Home"".
+2. Observe the resulting page.",URL returns to the login/home route; both role buttons are visible again.,Pass — automated,Medium,Automated — tests/landing-page.spec.ts (TC-LOGIN-002)
+Module 1 — Login and role selection,TC-ROLE-001,Customer Login redirects to the customer role page,Homepage displayed,"1. Click ""Customer Login"".
+2. Observe the URL and controls shown.","URL changes to the customer route (#/customer); a ""Your Name"" selector is shown; manager-only controls (Add Customer, Open Account, Customers) are not present.",Pass — automated,High,Automated — tests/role-navigation.spec.ts
+Module 1 — Login and role selection,TC-ROLE-002,Bank Manager Login redirects to the manager role page,Homepage displayed,"1. Click ""Bank Manager Login"".
+2. Observe the URL and controls shown.","URL changes to the manager route (#/manager); ""Add Customer"", ""Open Account"", and ""Customers"" are visible; customer-only controls (account selector, Deposit/Withdraw) are not present.",Pass — automated,High,Automated — tests/role-navigation.spec.ts
+Module 1 — Login and role selection,TC-CLOGIN-001,Your Name dropdown lists the available customers,Customer login page displayed,"1. Open the ""Your Name"" dropdown.
+2. Read the list of options.","More than one customer is listed, including known seed customers (e.g. Harry Potter, Hermoine Granger).",Pass — automated,Medium,Automated — tests/customer-login.spec.ts (TC-CLOGIN-001)
+Module 1 — Login and role selection,TC-CLOGIN-002,Valid customer selection logs in and reaches the account page,Customer login page displayed,"1. Select an existing customer (e.g. Harry Potter).
+2. Click ""Login"".","URL changes to #/account; a welcome message with the customer's name is shown; account number, currency labels, and a numeric balance are displayed.",Pass — automated,High,Automated — tests/customer-login.spec.ts (TC-CLOGIN-002)
+Module 1 — Login and role selection,TC-CLOGIN-003,Login is not possible without selecting a customer,"Customer login page displayed, no customer selected","1. Land on the customer login page without touching the dropdown.
+2. Look for a way to submit.","No ""Login"" control is available to submit; the page stays on the customer login route.",Pass — automated,High,Automated — tests/customer-login.spec.ts (TC-CLOGIN-003)
+Module 1 — Login and role selection,TC-CLOGIN-004,A customer with multiple accounts lists all of them at login,Customer with more than one account exists (e.g. Hermoine Granger),"1. Log in as that customer.
+2. Open the Account dropdown.","All of the customer's account numbers are present as options (e.g. 1001, 1002, 1003).",Pass — automated,Medium,Automated — tests/customer-login.spec.ts (TC-CLOGIN-004)
+Module 1 — Login and role selection,TC-ROLE-003,Unauthorised feature access is restricted per role,Homepage displayed,"1. Enter as Customer; confirm manager buttons (Add Customer/Open Account/Customers) are absent.
+2. Enter as Bank Manager; confirm the customer account selector and Deposit/Withdraw are absent.",Each role only exposes its own controls; the other role's controls are not present in either the DOM or visibly.,Pass — automated,High,Automated — tests/role-navigation.spec.ts
+Module 2 — Customer dashboard and account overview,TC-ACC-001,Account information panel is fully displayed,Logged in as a customer (e.g. Harry Potter),"1. Log in.
+2. Read the ""Account Number"", ""Balance"", and ""Currency"" labels and values.",Account Number is a numeric value; Balance is numeric (integer or decimal); Currency shows one of Dollar/Pound/Rupee.,Pass — automated,High,Automated — tests/account-view.spec.ts (TC-ACC-001)
+Module 2 — Customer dashboard and account overview,TC-ACC-002,"Switching account updates account number, balance, and currency together","Logged in as a customer with multiple accounts (e.g. Hermoine Granger: 1001, 1002, 1003)","1. Select account 1002 from the dropdown.
+2. Record the account number, balance, currency.
+3. Select account 1003.
+4. Record the same fields again.","After each selection, the account number matches the one chosen, and balance/currency update together — no value carried over from the previous account.",Pass — automated,High,Automated — tests/account-view.spec.ts (TC-ACC-002)
+Module 2 — Customer dashboard and account overview,TC-ACC-003,Logout ends the customer session,Logged in as a customer,"1. Click ""Logout"".","URL returns to the customer login route; the ""Your Name"" selector is visible again (i.e. no longer authenticated).",Pass — automated,High,Automated — tests/account-view.spec.ts (TC-ACC-003)
+Module 2 — Customer dashboard and account overview,TC-ACC-004,Welcome message shows the correct customer name,Logged in as a customer,"1. Log in as a specific customer.
+2. Read the welcome text.","Welcome text contains the exact name of the logged-in customer, not another customer's name.",Pass — automated,Medium,"Automated — tests/banking.spec.ts, tests/customer-login.spec.ts"
+Module 2 — Customer dashboard and account overview,TC-ACC-005,Default account selected on login is the customer's first account,Customer with multiple accounts,"1. Log in.
+2. Read the initially-selected value in the Account dropdown.","The first account (e.g. 1001 for Hermoine Granger) is selected by default, without requiring a manual selection.",Pass — automated,Medium,Automated — tests/banking.spec.ts
+Module 2 — Customer dashboard and account overview,TC-ACC-006,Account overview values are numeric and free of formatting glitches,Logged in as a customer,"1. Inspect the Balance field across a few accounts.
+2. Check for stray characters, wrong decimal separators, or truncation.","Balance renders as a clean number (optionally with a decimal portion); no currency symbol/locale mismatch, no truncated digits.",Not executed — pending manual QA,Low,Manual only — visual/formatting review
+Module 3 — Deposit functionality,TC-DEP-001,A valid deposit increases the balance,Logged in as a customer; starting balance known,"1. Click ""Deposit"".
+2. Enter a positive whole amount (e.g. 100).
+3. Submit.","A success message (""Deposit Successful"") appears; balance increases by exactly the deposited amount.",Pass — automated,High,Automated — tests/deposit.spec.ts (TC-DEP-001)
+Module 3 — Deposit functionality,TC-DEP-002,Empty amount is not processed,Deposit form open,"1. Leave the Amount field empty.
+2. Submit.",No success message appears; balance is unchanged.,Pass — automated,High,Automated — tests/deposit.spec.ts (TC-DEP-002)
+Module 3 — Deposit functionality,TC-DEP-003,Deposit of 0 leaves the balance unchanged,Deposit form open,"1. Enter 0 in Amount.
+2. Submit.",No success message appears; balance is unchanged.,Pass — automated,High,Automated — tests/deposit.spec.ts (TC-DEP-003)
+Module 3 — Deposit functionality,TC-DEP-004,Negative deposit amount is rejected,Deposit form open,"1. Enter -50 in Amount.
+2. Submit.",No success message appears; balance is unchanged (does not decrease).,Pass — automated,High,Automated — tests/deposit.spec.ts (TC-DEP-004)
+Module 3 — Deposit functionality,TC-DEP-005,Decimal deposit amount is rejected by the Amount field,Deposit form open,"1. Enter 100.50 in Amount.
+2. Submit.","Observed rule: the Amount field only accepts whole numbers, so a decimal value fails field validation and no transaction is recorded; balance unchanged.",Pass — automated,Medium,Automated — tests/deposit.spec.ts (TC-DEP-005)
+Module 3 — Deposit functionality,TC-DEP-006,Non-numeric characters are rejected,Deposit form open,"1. Type ""abc"" into the Amount field.
+2. Submit.",The Amount field cannot hold non-numeric text (remains empty); no success message; balance unchanged.,Pass — automated,Medium,Automated — tests/deposit.spec.ts (TC-DEP-006)
+Module 3 — Deposit functionality,TC-DEP-007,A very large deposit amount is calculated correctly,Deposit form open,"1. Enter a very large whole number (e.g. 99,999,999,999).
+2. Submit.","Balance increases by exactly the entered amount, with no overflow, rounding, or truncation error.",Pass — automated,Medium,Automated — tests/deposit.spec.ts (TC-DEP-007)
+Module 3 — Deposit functionality,TC-DEP-008,Excessively large deposit amount is rejected,Deposit form open,"1. Enter an unreasonably large amount (e.g. 999,999,999,999).
+2. Submit.",**Expected per test plan:** the deposit is rejected with no success message and an unchanged balance. **Observed on the live app:** the deposit succeeds — there is no upper-bound validation.,**Fail — confirmed application gap.** Success message appeared and the balance increased.,High,Automated — tests/validation.spec.ts (documents the gap; assertion currently fails by design)
+Module 3 — Deposit functionality,TC-DEP-009,Deposit success message is clear and does not disappear prematurely,Valid deposit submitted,"1. Submit a valid deposit.
+2. Time how long the confirmation stays visible/readable.","The success message is legible and remains on screen long enough to be read, not just flashed.",Not executed — pending manual QA,Low,Manual only — subjective/timing-based UX check
+Module 4 — Withdraw functionality,TC-WD-001,A withdrawal within the balance succeeds,Logged in as a customer with a balance greater than the withdrawal amount,"1. Click ""Withdrawl"".
+2. Enter an amount below the current balance (e.g. 50).
+3. Submit.",A success message appears; balance decreases by exactly the withdrawn amount.,Pass — automated,High,Automated — tests/withdraw.spec.ts (TC-WD-001)
+Module 4 — Withdraw functionality,TC-WD-002,Withdrawal exceeding the balance is rejected,Logged in as a customer,"1. Enter an amount greater than the current balance (e.g. balance + 1000).
+2. Submit.",An error/failure message appears; balance is unchanged.,Pass — automated,High,Automated — tests/withdraw.spec.ts (TC-WD-002)
+Module 4 — Withdraw functionality,TC-WD-003,Withdrawing exactly the full balance leaves 0,"Balance is a known, non-zero value","1. Enter an amount equal to the full current balance.
+2. Submit.",A success message appears; balance becomes exactly 0.,Pass — automated,High,Automated — tests/withdraw.spec.ts (TC-WD-003)
+Module 4 — Withdraw functionality,TC-WD-004,Withdrawal of balance + 1 is rejected,Balance is a known value,"1. Enter an amount equal to balance + 1.
+2. Submit.","Rejected with a failure message; balance unchanged — confirms the boundary is enforced precisely, not just for large overages.",Pass — automated,High,Automated — tests/withdraw.spec.ts (TC-WD-004)
+Module 4 — Withdraw functionality,TC-WD-005,Empty amount is not processed,Withdraw form open,"1. Leave Amount empty.
+2. Submit.",No success message; balance unchanged.,Pass — automated,Medium,Automated — tests/withdraw.spec.ts (TC-WD-005)
+Module 4 — Withdraw functionality,TC-WD-006,Negative withdrawal amount is rejected,Withdraw form open,"1. Enter -20 in Amount.
+2. Submit.",No success message; balance unchanged (must not increase).,Pass — automated,Medium,Automated — tests/withdraw.spec.ts (TC-WD-006)
+Module 4 — Withdraw functionality,TC-WD-007,Withdrawal from a 0 balance is rejected,Account balance is 0,"1. Enter any positive amount (e.g. 10).
+2. Submit.",Rejected with a failure message; balance remains 0.,Pass — automated,High,Automated — tests/withdraw.spec.ts (TC-WD-007)
+Module 4 — Withdraw functionality,TC-WD-008,Withdraw error message is clear and readable,Withdrawal over the balance attempted,"1. Trigger the over-balance error.
+2. Read the message text and check its visibility/contrast.",Message clearly states the withdrawal failed/could not be processed; stays visible long enough to read.,Not executed — pending manual QA,Low,Manual only — subjective UX/copy review
+Module 5 — Transaction history,TC-TXN-001,A deposit is recorded as Credit,Logged in as a customer,"1. Deposit a known amount (e.g. 77).
+2. Open ""Transactions"".","A row exists with type ""Credit"", amount 77, and a non-empty timestamp.",Pass — automated,High,Automated — tests/transactions.spec.ts (TC-TXN-001)
+Module 5 — Transaction history,TC-TXN-002,A withdrawal is recorded as Debit,Logged in as a customer with sufficient balance,"1. Withdraw a known amount (e.g. 35).
+2. Open ""Transactions"".","A row exists with type ""Debit"", amount 35, and a non-empty timestamp.",**Fail (last run) — likely flaky.** The live app's Transactions view intermittently renders empty right after a deposit+withdraw combo in the same session; re-run to confirm before filing as a defect.,High,Automated — tests/transactions.spec.ts (TC-TXN-002)
+Module 5 — Transaction history,TC-TXN-003,Reset behaves consistently with what is actually shown,Logged in as a customer with at least one transaction,"1. Open ""Transactions"".
+2. If a ""Reset"" control (inside the date-range filter panel) is visible, click it and check the table.
+3. If not visible, check the table without using it.","If Reset is reachable, using it clears the transaction list. If it is not reachable, the transaction history remains intact and visible.",Pass — automated,Low,Automated — tests/transactions.spec.ts (TC-TXN-003)
+Module 5 — Transaction history,TC-TXN-004,Back button returns to the account page,On the Transactions page,"1. Click ""Back"".",URL returns to the account route; the balance is displayed correctly again.,Pass — automated,Medium,Automated — tests/transactions.spec.ts (TC-TXN-004)
+Module 5 — Transaction history,TC-TXN-005,Transaction order and timestamps are consistent,Logged in as a customer,"1. Deposit 100.
+2. Withdraw 30.
+3. Deposit 20.
+4. Open ""Transactions"" and read the last 3 rows.","Rows appear in the order performed (Credit 100, Debit 30, Credit 20); each has a non-empty timestamp; timestamps are non-decreasing in that order.",**Fail (last run) — likely flaky.** Same intermittent empty-table issue as TC-TXN-002; re-run to confirm.,High,Automated — tests/transactions.spec.ts (TC-TXN-005)
+Module 5 — Transaction history,TC-TXN-006,An account with a large transaction volume loads without error,"Customer/account with an extensive seeded transaction history (e.g. Hermoine Granger, account 1001)","1. Log in.
+2. Open ""Transactions"".","The table renders all rows (100+) without error, timeout, or pagination cutoff that hides data.",Pass — automated,Medium,Automated — tests/transactions.spec.ts (TC-TXN-006)
+Module 5 — Transaction history,TC-TXN-007,Transaction dates are readable and use a consistent format,Transactions view open,1. Read the timestamp column across several rows.,"All timestamps use the same format/timezone convention; none are ambiguous, truncated, or rendered as raw epoch values.",Not executed — pending manual QA,Low,Manual only — visual/formatting review
+Module 5 — Transaction history,TC-TXN-008,Transaction table has meaningful column headers,Transactions view open,1. Inspect the table header row.,"Columns are clearly labelled (e.g. Date, Amount, Type) so a user can interpret each row without guessing.",Not executed — pending manual QA,Low,Manual only — usability review
+Module 6 — Bank Manager: Add Customer,TC-ADD-001,Add a customer with valid data,"Logged in / navigated as Bank Manager, on Add Customer","1. Enter a unique First Name and Last Name.
+2. Enter a numeric Post Code.
+3. Click ""Add Customer"".",A confirmation dialog states the customer was added successfully with a new customer ID; the customer appears in the Customers list.,Pass — automated,High,Automated — tests/add-customer.spec.ts (TC-ADD-001)
+Module 6 — Bank Manager: Add Customer,TC-ADD-002,All fields empty is not submitted,"Add Customer form open, all fields empty","1. Click ""Add Customer"" without filling any field.",Required-field validation blocks submission; no confirmation dialog appears.,Pass — automated,High,Automated — tests/add-customer.spec.ts (TC-ADD-002)
+Module 6 — Bank Manager: Add Customer,TC-ADD-003,Missing Post Code is not submitted,"First Name and Last Name filled, Post Code empty","1. Fill First Name and Last Name.
+2. Leave Post Code empty.
+3. Click ""Add Customer"".",Required-field validation blocks submission; no confirmation dialog appears.,Pass — automated,High,Automated — tests/add-customer.spec.ts (TC-ADD-003)
+Module 6 — Bank Manager: Add Customer,TC-ADD-004,An exact duplicate customer is rejected,"A customer with a known first name, last name, and post code already exists","1. Add a customer with a unique name/post code (baseline).
+2. Submit the exact same first name, last name, and post code again.","Second submission is rejected with a ""may be duplicate"" message; the customer is not added twice (list still shows one row).",Pass — automated,Medium,Automated — tests/add-customer.spec.ts (TC-ADD-004)
+Module 6 — Bank Manager: Add Customer,TC-ADD-005,Name with numbers and special characters is accepted,Add Customer form open,"1. Enter a first/last name containing digits and symbols (e.g. J0hn@#).
+2. Fill a valid Post Code.
+3. Submit.",Observed rule: name fields accept any characters — submission succeeds and the customer appears in the list.,Pass — automated,Low,Automated — tests/add-customer.spec.ts (TC-ADD-005)
+Module 6 — Bank Manager: Add Customer,TC-ADD-006,Post Code with letters is accepted,Add Customer form open,"1. Fill valid name fields.
+2. Enter a Post Code with letters (e.g. ABCDE).
+3. Submit.",Observed rule: Post Code accepts alphanumeric input; submission succeeds. (See TC-ADD-009 — this is the same underlying gap as rejecting an *invalid* post code.),Pass — automated,Low,Automated — tests/add-customer.spec.ts (TC-ADD-006)
+Module 6 — Bank Manager: Add Customer,TC-ADD-007,A very long name is handled without breaking the layout,Add Customer form open,"1. Enter a first name of ~300 characters.
+2. Fill the remaining fields validly.
+3. Submit.",Submission succeeds; the Customers table still renders correctly afterwards (no layout break).,Pass — automated,Low,Automated — tests/add-customer.spec.ts (TC-ADD-007)
+Module 6 — Bank Manager: Add Customer,TC-ADD-008,Leading/trailing spaces are trimmed from the name,Add Customer form open,"1. Enter a first name and last name padded with spaces (e.g. ""  Bob  "").
+2. Submit.
+3. Check the Customers list.",The stored name is trimmed of leading/trailing whitespace.,Pass — automated,Low,Automated — tests/add-customer.spec.ts (TC-ADD-008)
+Module 6 — Bank Manager: Add Customer,TC-ADD-009,Invalid (non-numeric) Post Code is rejected,Add Customer form open,"1. Fill a unique, valid name.
+2. Enter a non-numeric Post Code (e.g. abcde).
+3. Submit.",**Expected per test plan:** submission is rejected with a validation message; customer is not created. **Observed on the live app:** the customer is created successfully — Post Code format is not validated.,**Fail — confirmed application gap.** Confirmation dialog reported success and the customer appeared in the list.,High,Automated — tests/validation.spec.ts (documents the gap; assertion currently fails by design)
+Module 6 — Bank Manager: Add Customer,TC-ADD-010,Validation messages are clear when a required field is missing,Add Customer form partially filled,"1. Leave one required field empty.
+2. Attempt to submit.
+3. Read the browser/field-level validation feedback.","The message clearly identifies which field is missing/invalid, is visible, and does not require guessing.",Not executed — pending manual QA,Low,Manual only — subjective UX/copy review
+Module 7 — Bank Manager: Open Account,TC-OPEN-001,Open an account with a valid currency,"Navigated as Bank Manager, on Open Account; an existing customer available","1. Select an existing customer.
+2. Select a currency (e.g. Dollar).
+3. Click ""Process"".",Confirmation message states the account was created successfully with a new account number.,Pass — automated,High,Automated — tests/open-account.spec.ts (TC-OPEN-001)
+Module 7 — Bank Manager: Open Account,TC-OPEN-002,Process without a selected customer is blocked,"Open Account form open, no customer selected","1. Select a currency only.
+2. Click ""Process"".",Submission is blocked by required-field validation on the customer selector; no account is created.,Pass — automated,High,Automated — tests/open-account.spec.ts (TC-OPEN-002)
+Module 7 — Bank Manager: Open Account,TC-OPEN-003,Process without a selected currency is blocked,"Open Account form open, customer selected, no currency","1. Select a customer only.
+2. Click ""Process"".",Submission is blocked by required-field validation on the currency selector; no account is created.,Pass — automated,High,Automated — tests/open-account.spec.ts (TC-OPEN-003)
+Module 7 — Bank Manager: Open Account,TC-OPEN-004,Currency dropdown shows the full set of options,Open Account form open,"1. Open the Currency dropdown.
+2. Read the options.","Dollar, Pound, and Rupee are all present.",Pass — automated,Low,Automated — tests/open-account.spec.ts (TC-OPEN-004)
+Module 7 — Bank Manager: Open Account,TC-OPEN-005,A customer can hold more than one account of the same currency,An existing customer with a known account count,"1. Note the customer's current number of accounts (log in and count).
+2. Open a new account for that customer with a currency they already hold.
+3. Log back in as that customer and recount.",The account count increases by exactly one; the new account appears in the Account dropdown.,Pass — automated,Medium,Automated — tests/open-account.spec.ts (TC-OPEN-005)
+"Module 8 — Bank Manager: Customers list, search, sort, delete",TC-CUST-001,The customer list is fully displayed,"Navigated as Bank Manager, on Customers","1. Open ""Customers"".
+2. Inspect the table header and first row.","Table shows First Name, Last Name, Post Code, Account Number, and Delete columns; at least one row with a working ""Delete"" button is present.",Pass — automated,Medium,Automated — tests/customers.spec.ts (TC-CUST-001)
+"Module 8 — Bank Manager: Customers list, search, sort, delete",TC-CUST-002,Search filters the table by name,Customers list open,"1. Type a known first name (e.g. ""Harry"") into the search box.","The table narrows to only rows matching ""Harry""; the visible row(s) contain that text.",Pass — automated,High,Automated — tests/customers.spec.ts (TC-CUST-002)
+"Module 8 — Bank Manager: Customers list, search, sort, delete",TC-CUST-003,"Search with no matches shows an empty table, not an error",Customers list open,"1. Type a string that matches no customer (e.g. ""zzzzz"").",Table shows zero rows; no error or broken layout.,Pass — automated,Medium,Automated — tests/customers.spec.ts (TC-CUST-003)
+"Module 8 — Bank Manager: Customers list, search, sort, delete",TC-CUST-004,Search is not case-sensitive,Customers list open,"1. Search ""harry"" (lower case) and note the row count.
+2. Search ""HARRY"" (upper case) and note the row count.",Both searches return the same number of matching rows (greater than zero).,Pass — automated,Low,Automated — tests/customers.spec.ts (TC-CUST-004)
+"Module 8 — Bank Manager: Customers list, search, sort, delete",TC-CUST-005,Deleting a customer removes their row,A disposable test customer exists in the list,"1. Locate the customer's row.
+2. Click ""Delete"" on that row.","The row is removed from the table immediately, without a page reload.",Pass — automated,High,Automated — tests/customers.spec.ts (TC-CUST-005)
+"Module 8 — Bank Manager: Customers list, search, sort, delete",TC-CUST-006,A deleted customer disappears from the Customer Login dropdown,A test customer was just deleted (TC-CUST-005),"1. Go to Customer Login.
+2. Open the ""Your Name"" dropdown.",The deleted customer's name is no longer listed as an option.,Pass — automated,Medium,Automated — tests/customers.spec.ts (TC-CUST-006)
+"Module 8 — Bank Manager: Customers list, search, sort, delete",TC-CUST-007,Sorting by the First Name column works both directions,"Customers list open, multiple rows present","1. Click the ""First Name"" column header once; record the order.
+2. Click it again; record the order.","One click produces alphabetically ascending order, the other produces descending order; the two orders differ from each other.",Pass — automated,Medium,Automated — tests/customers.spec.ts (TC-CUST-007)
+"Module 8 — Bank Manager: Customers list, search, sort, delete",TC-CUST-008,A newly added customer appears in the list,Add Customer flow completed for a new customer,"1. Add a customer with a unique name.
+2. Navigate to Customers.",The new customer's row is present without needing a manual page refresh.,Pass — automated,Medium,Automated — tests/customers.spec.ts (TC-CUST-008)
+"Module 8 — Bank Manager: Customers list, search, sort, delete",TC-CUST-009,"Search box has a clear, discoverable label/placeholder",Customers list open,1. Look at the search input without typing anything.,"The input's purpose (searching/filtering customers) is obvious from its label or placeholder text, not just its position on the page.",Not executed — pending manual QA,Low,Manual only — usability/discoverability review
+"Module 9 — Data persistence, integrity, and unauthorised access",TC-PERS-001,Customer data persists after a page refresh,Logged in as a customer; a deposit just made,"1. Log in, select an account, deposit a known amount.
+2. Record the resulting balance.
+3. Refresh the page (F5).
+4. Re-check the welcome message, selected account, balance, and Transactions.","Customer identity, selected account, balance, and the just-made transaction all remain exactly as before the refresh.","**Fail — confirmed application gap.** After refresh, the customer stays logged in on the same account, but balance and transaction history reset to the seed data (observed: expected 60, received 0).",High,Automated — tests/access-and-persistence.spec.ts (documents the gap; assertion currently fails by design)
+"Module 9 — Data persistence, integrity, and unauthorised access",TC-PERS-002,Customer data persists after logout and re-login,Logged in as a customer; a deposit just made,"1. Deposit a known amount and note the resulting balance.
+2. Click ""Logout"".
+3. Log back in as the same customer and reselect the same account.
+4. Check balance and Transactions.",Balance and the transaction history recorded before logout are still present after re-login.,Pass — automated,High,Automated — tests/access-and-persistence.spec.ts
+"Module 9 — Data persistence, integrity, and unauthorised access",TC-PERS-003,A customer session cannot reach manager controls by direct navigation,Logged in as a customer,"1. While logged in as a customer, change the URL directly to the manager route.
+2. Check for Add Customer / Open Account / Customers controls.",Manager-only controls remain hidden even via direct URL navigation.,"Pass — automated (last run). **Note:** a comment in tests/access-and-persistence.spec.ts describes this as a known route-guard gap, but that does not match the last recorded result, where this specific test passed. Treat as an open discrepancy — re-verify manually before reporting either way.",High,Automated — tests/access-and-persistence.spec.ts
+"Module 9 — Data persistence, integrity, and unauthorised access",TC-PERS-004,A manager session does not expose another customer's private account data,Navigated as Bank Manager (no customer bound to this session),"1. While in the manager session, navigate directly to the customer account route (#/account).",No real account number or balance renders for an unbound manager session (no other customer's private data leaks through).,Pass — automated,High,Automated — tests/access-and-persistence.spec.ts
+"Module 9 — Data persistence, integrity, and unauthorised access",TC-PERS-005,Deposit and withdrawal both update the balance consistently across a session,Logged in as a customer,"1. Deposit 100.
+2. Withdraw 40.
+3. Compare the running balance shown after each step against manual arithmetic.","Balance after each operation exactly matches starting balance + deposits − withdrawals, with no drift.",Pass — automated,High,Automated — tests/banking.spec.ts
+"Module 9 — Data persistence, integrity, and unauthorised access",TC-PERS-006,No data inconsistency when switching between two different customers in the same browser,No active session,"1. Log in as Customer A, note balance.
+2. Log out.
+3. Log in as Customer B, note balance.
+4. Log back in as Customer A.",Customer A's balance after step 4 matches step 1 (unaffected by Customer B's session in between); no cross-contamination of account data.,Not executed — pending manual QA,Medium,Candidate — extend tests/access-and-persistence.spec.ts with a second customer
+Module 10 — Responsive layout and cross-browser compatibility,TC-RESP-001,Core flows remain usable at mobile width (375×812),Browser viewport set to 375×812,"1. Load the homepage; select Customer Login; log in; deposit; open Add Customer.
+2. At each step, check for horizontal scrolling and clipped controls.","No horizontal overflow at any step; all buttons, labels, and alerts remain visible and tappable.",Pass — automated,Medium,Automated — tests/responsive.spec.ts
+Module 10 — Responsive layout and cross-browser compatibility,TC-RESP-002,Core flows remain usable at tablet width (768×1024),Browser viewport set to 768×1024,Same steps as TC-RESP-001 at this viewport.,Same expectations as TC-RESP-001.,Pass — automated,Medium,Automated — tests/responsive.spec.ts
+Module 10 — Responsive layout and cross-browser compatibility,TC-RESP-003,Core flows remain usable at desktop width (1440×900),Browser viewport set to 1440×900,Same steps as TC-RESP-001 at this viewport.,Same expectations as TC-RESP-001.,Pass — automated,Low,Automated — tests/responsive.spec.ts
+Module 10 — Responsive layout and cross-browser compatibility,TC-XB-001,Homepage role choices are usable across browsers,N/A,"1. Load the homepage in Chromium, Firefox, and WebKit.
+2. Confirm both login buttons render and are clickable in each.",Homepage loads and both role options are usable in all three engines.,Pass — automated,Medium,Automated — tests/cross-browser.spec.ts
+Module 10 — Responsive layout and cross-browser compatibility,TC-XB-002,Customer login validation is consistent across browsers,N/A,"1. In each browser, attempt login without a selection, then with a valid one.","Same behaviour in all three engines: no submission without a selection, successful login with one.",Pass — automated,Medium,Automated — tests/cross-browser.spec.ts
+Module 10 — Responsive layout and cross-browser compatibility,TC-XB-003,Deposit updates the balance consistently across browsers,N/A,"1. In each browser, deposit a known amount and check the resulting balance.",Balance increases by the deposited amount identically in all three engines.,Pass — automated,Medium,Automated — tests/cross-browser.spec.ts
+Module 10 — Responsive layout and cross-browser compatibility,TC-XB-004,Withdrawal updates the balance consistently across browsers,N/A,"1. In each browser, deposit then withdraw a known amount and check the resulting balance.",Balance reflects deposit minus withdrawal identically in all three engines.,Pass — automated,Medium,Automated — tests/cross-browser.spec.ts
+Module 10 — Responsive layout and cross-browser compatibility,TC-XB-005,Add Customer dialog and table update consistently across browsers,N/A,"1. In each browser, add a uniquely-named customer.
+2. Confirm the success dialog text and the Customers list.","Same confirmation wording and list update behaviour across Chromium, Firefox, and WebKit.",Pass — automated,Medium,Automated — tests/cross-browser.spec.ts
+Module 10 — Responsive layout and cross-browser compatibility,TC-RESP-004,"Tables (Transactions, Customers) remain fully reachable on narrow screens",Viewport at 375×812,"1. Open Transactions and Customers at this width.
+2. Attempt to read every column without accidental clipping.","All table data is reachable (via horizontal scroll inside the table container, not page-level overflow) and readable without zooming.",Not executed — pending manual QA,Medium,"Manual only — visual review; automated check only covers page-level overflow, not per-table scroll ergonomics"
+Module 10 — Responsive layout and cross-browser compatibility,TC-RESP-005,Touch targets are large enough on mobile width,Viewport at 375×812,"1. Attempt to tap each button (Login, Deposit, Withdraw, Add Customer) on a touch-sized target.",Buttons are large enough to tap reliably without accidentally hitting a neighbouring control.,Not executed — pending manual QA,Low,Manual only — subjective touch-target review
+Module 11 — Usability and accessibility,TC-UX-001,Every interactive control has an accessible name,Any page with buttons/inputs/selects,"1. Use a screen reader or the browser's accessibility inspector on each control.
+2. Check the announced name.","Every button, input, and dropdown has a meaningful accessible name (not ""button"" or blank).",Not executed — pending manual QA,Medium,Manual only — accessibility audit
+Module 11 — Usability and accessibility,TC-UX-002,Controls have a visible focus state,Any page with interactive controls,1. Tab through the page using the keyboard only.,Each focused control shows a clear visible focus indicator (outline/highlight).,Not executed — pending manual QA,Medium,Manual only — visual/keyboard review
+Module 11 — Usability and accessibility,TC-UX-003,Full flows are operable by keyboard alone,Homepage,"1. Using only Tab/Shift+Tab/Enter/Space/Arrow keys, complete: role selection → customer login → deposit.
+2. Repeat for the manager add-customer flow.",Every step is reachable and operable without a mouse.,Not executed — pending manual QA,Medium,Manual only — keyboard-navigation review
+Module 11 — Usability and accessibility,TC-UX-004,Success and error feedback is understandable and legible,"Any action producing a success/error message (deposit, withdraw, add customer)","1. Trigger each type of feedback.
+2. Judge clarity of wording and legibility (contrast, size).",Message text plainly states what happened; contrast and size are sufficient to read at a glance.,Not executed — pending manual QA,Medium,Manual only — subjective UX review
+Module 11 — Usability and accessibility,TC-UX-005,Feedback does not disappear before it can be read,Any success/error message,"1. Trigger a message.
+2. Time how long it stays visible/interactable.",Message remains visible long enough for a typical user to read it (not an instant flash).,Not executed — pending manual QA,Low,Manual only — timing-based UX review
+Module 11 — Usability and accessibility,TC-UX-006,Currency and numeric values use consistent formatting,"Account overview, across multiple accounts/currencies","1. Compare balance formatting across Dollar, Pound, and Rupee accounts.","Formatting (decimal places, grouping) is consistent and never loses precision.",Not executed — pending manual QA,Low,Manual only — visual/formatting review
+Module 11 — Usability and accessibility,TC-UX-007,Browser back button does not expose stale customer information,"Logged in as a customer, then logged out","1. Log out.
+2. Use the browser Back button.",The previous customer's balance/account data is not visible after going back post-logout.,Not executed — pending manual QA,High,"Manual only — needs a real browser back-button interaction, not simulated navigation"

@@ -1,0 +1,23 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - button "Home" [ref=e5] [cursor=pointer]
+    - strong [ref=e6]: XYZ Bank
+    - button "Logout" [ref=e40] [cursor=pointer]
+  - generic [ref=e42]:
+    - generic [ref=e43]:
+      - strong [ref=e44]: Welcome Hermoine Granger !!
+      - combobox [ref=e45]:
+        - option "1001" [selected]
+        - option "1002"
+        - option "1003"
+    - generic [ref=e46]:
+      - text: "Account Number :"
+      - strong [ref=e47]: "1001"
+      - text: ", Balance :"
+      - strong [ref=e48]: "5096"
+      - text: ", Currency :"
+      - strong [ref=e49]: Dollar
+    - generic [ref=e50]:
+      - button "Transactions" [ref=e51] [cursor=pointer]
+      - button "Deposit" [ref=e52] [cursor=pointer]
+      - button "Withdrawl" [ref=e53] [cursor=pointer]

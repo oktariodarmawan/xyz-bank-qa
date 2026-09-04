@@ -1,0 +1,8 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - button "Home" [ref=e5] [cursor=pointer]
+    - strong [ref=e6]: XYZ Bank
+  - generic [ref=e29]:
+    - button "Add Customer" [ref=e30] [cursor=pointer]
+    - button "Open Account" [ref=e31] [cursor=pointer]
+    - button "Customers" [ref=e32] [cursor=pointer]
