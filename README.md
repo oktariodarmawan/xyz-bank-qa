@@ -16,31 +16,67 @@ Manual and automated test coverage for the [XYZ Bank demo application](https://w
 - [Playwright Test](https://playwright.dev/) with TypeScript
 - Chromium (full suite) plus Firefox and WebKit (cross-browser smoke subset — substituting for Edge, see note below)
 
-## Getting started
+## How to run this project
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (any current LTS version) and npm, already installed.
+- An internet connection — the suite drives the real, live public demo site; there is no local server to start.
+
+### 1. Install dependencies
+
+From the project root:
 
 ```bash
 npm install
-npx playwright install   # downloads the browser binaries Playwright needs
 ```
 
-Run the full automated suite:
+### 2. Install the browsers Playwright needs
+
+```bash
+npx playwright install
+```
+
+This downloads Chromium, Firefox, and WebKit binaries. Only needs to be run once (or again after a Playwright version upgrade).
+
+### 3. Run the full automated suite
 
 ```bash
 npm run test:e2e
 ```
 
-Other useful scripts (see `package.json`):
+This runs all 84 automated test cases (94 executions once Firefox/WebKit cross-browser runs are counted) sequentially against the live demo site. Expect this to take **roughly 10–20 minutes** — it depends on how responsive the live site is that day, not on your machine.
+
+**Expect 3–4 failures on a typical run** — this is normal, not broken. Three are confirmed real defects in the demo application itself (documented below), and one is an intermittent live-site rendering quirk. See [Known application gaps](#known-application-gaps).
+
+### 4. Run a subset instead of everything
 
 ```bash
-npm run test:e2e:ui        # interactive UI mode
-npm run test:e2e:headed    # run with a visible browser
-npm run report              # open the HTML report from the last run
-npm run export:test-cases   # regenerate the .xlsx/.csv exports from manual-test-cases/*.md
+npx playwright test tests/05-deposit.spec.ts       # just one file
+npx playwright test -g "TC-DEP-001"                # just one test, by name
+npx playwright test --project=chromium             # skip the Firefox/WebKit cross-browser subset
 ```
 
-> The suite runs against the live public demo site with `workers: 1` (sequential), since
-> customer accounts are shared, mutable state. Re-running deposit/withdraw/add-customer tests
-> repeatedly will keep mutating real data on that shared demo instance.
+### 5. View the results
+
+```bash
+npm run report
+```
+
+Opens the full interactive HTML report from the last run — pass/fail per test, screenshots and video for anything that failed, and traces you can step through action-by-action.
+
+### 6. Other useful scripts
+
+```bash
+npm run test:e2e:ui        # interactive UI mode — step through tests visually
+npm run test:e2e:headed    # same tests, with a visible (non-headless) browser window
+npm run export:test-cases  # regenerate manual-test-cases-excel/XYZ-Bank-Test-Cases.xlsx and the CSV, from manual-test-cases/*.md
+```
+
+> **Why sequential, not parallel:** `playwright.config.ts` sets `workers: 1` deliberately. Customer
+> accounts on the live demo site are shared, mutable data — running tests in parallel would let
+> them interfere with each other's balances. Re-running deposit/withdraw/add-customer tests
+> repeatedly also keeps mutating real data on that shared demo instance; that's expected.
 
 ## Publishing this repo to GitHub
 
