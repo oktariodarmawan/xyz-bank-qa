@@ -30,7 +30,9 @@ export class AccountPage {
     this.accountNumberValue = page.locator('.center strong').first();
     this.balance = page.locator('.center strong').nth(1);
     this.currencyValue = page.locator('.center strong').nth(2);
-    this.depositButton = page.getByRole('button', { name: 'Deposit' });
+    // Exact + first(): once the deposit form is open, its submit button is also named
+    // exactly "Deposit", making the plain role query ambiguous between the tab and the form.
+    this.depositButton = page.getByRole('button', { name: 'Deposit', exact: true }).first();
     this.withdrawButton = page.getByRole('button', { name: 'Withdrawl' });
     this.transactionsButton = page.getByRole('button', { name: 'Transactions' });
     this.logoutButton = page.getByRole('button', { name: 'Logout' });

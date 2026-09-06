@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { ManagerPage } from './ManagerPage.js';
 
 export class AddCustomerPage {
@@ -18,6 +18,13 @@ export class AddCustomerPage {
 
   async goto() {
     await this.page.goto('#/manager/addCust');
+    // The live app's Angular bootstrap can outlast the `load` event goto() waits for,
+    // so the form isn't always rendered yet; reload once before giving up.
+    const appeared = await this.firstNameInput.waitFor({ state: 'visible', timeout: 10000 }).then(() => true).catch(() => false);
+    if (!appeared) {
+      await this.page.reload();
+      await expect(this.firstNameInput).toBeVisible({ timeout: 15000 });
+    }
   }
 
   async addCustomer(firstName: string, lastName: string, postCode: string): Promise<string> {

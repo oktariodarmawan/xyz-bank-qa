@@ -15,6 +15,13 @@ export class HomePage {
 
   async goto() {
     await this.page.goto('#/login');
+    // The live app's Angular bootstrap can outlast the `load` event goto() waits for,
+    // so the login buttons aren't always rendered yet; reload once before giving up.
+    const appeared = await this.customerLoginButton.waitFor({ state: 'visible', timeout: 10000 }).then(() => true).catch(() => false);
+    if (!appeared) {
+      await this.page.reload();
+      await expect(this.customerLoginButton).toBeVisible({ timeout: 15000 });
+    }
   }
 
   async expectLoaded() {

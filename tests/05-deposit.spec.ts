@@ -99,4 +99,17 @@ test.describe('Deposit', () => {
     await expect(accountPage.depositSuccessMessage).toBeVisible();
     expect(await accountPage.getBalance()).toBe(startingBalance + largeAmount);
   });
+
+  // TC-DEP-008 (DEP-02): multiple consecutive deposits accumulate correctly
+  test('TC-DEP-008: multiple consecutive deposits accumulate', async ({ page }) => {
+    const customerLoginPage = new CustomerLoginPage(page);
+    const accountPage = await customerLoginPage.loginAsCustomer('Neville Longbottom');
+    const startingBalance = await accountPage.getBalance();
+
+    await accountPage.deposit(100);
+    await accountPage.deposit(50);
+    await accountPage.deposit(25);
+
+    expect(await accountPage.getBalance()).toBe(startingBalance + 175);
+  });
 });

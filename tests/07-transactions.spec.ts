@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { CustomerLoginPage } from './pages/CustomerLoginPage.js';
+import { OpenAccountPage } from './pages/OpenAccountPage.js';
 
 // Module: Transactions (TC-TXN-*)
 test.describe('Transactions', () => {
@@ -106,5 +107,43 @@ test.describe('Transactions', () => {
     const rowCount = await transactionsPage.rowCount();
 
     expect(rowCount).toBeGreaterThan(100);
+  });
+
+  // TC-TXN-007 (TXN-06): transactions are specific to the selected account
+  test('TC-TXN-007: transactions are specific to the selected account', async ({ page }) => {
+    const customerLoginPage = new CustomerLoginPage(page);
+    const accountPage = await customerLoginPage.loginAsCustomer('Hermoine Granger');
+
+    await accountPage.selectAccount('1002');
+    const marker = 137; // an amount unlikely to already exist in the seed history
+    await accountPage.deposit(marker);
+
+    // 1001 is the seeded account with a large, reliably-rendered transaction history
+    // (see TC-TXN-006) — checking against it avoids the ambiguity of an account whose
+    // table might legitimately have too little history to tell "empty" from "not leaked".
+    await accountPage.selectAccount('1001');
+    const transactionsPage = await accountPage.goToTransactions();
+    const rows = await transactionsPage.allRowsText();
+    const leaked = rows.some(row => row[1] === String(marker) && row[2] === 'Credit');
+    expect(leaked).toBe(false);
+  });
+
+  // TC-TXN-008 (TXN-07): a freshly opened account with no transactions shows an empty history
+  test('TC-TXN-008: an account with no transactions shows an empty history', async ({ page }) => {
+    const openAccountPage = new OpenAccountPage(page);
+    await openAccountPage.goto();
+    await openAccountPage.selectCustomer('Ron Weasly');
+    await openAccountPage.selectCurrency('Pound');
+    const dialogMessage = await openAccountPage.process();
+    const newAccountNumber = dialogMessage.match(/\d+/)?.[0];
+    expect(newAccountNumber).toBeTruthy();
+
+    const customerLoginPage = new CustomerLoginPage(page);
+    const accountPage = await customerLoginPage.loginAsCustomer('Ron Weasly');
+    await accountPage.selectAccount(newAccountNumber!);
+    await expect(accountPage.accountSelect).toHaveValue(`number:${newAccountNumber}`);
+
+    const transactionsPage = await accountPage.goToTransactions();
+    await expect(transactionsPage.rows).toHaveCount(0);
   });
 });

@@ -72,4 +72,30 @@ test.describe('Open Account', () => {
 
     expect(accountsAfter).toBe(accountsBefore + 1);
   });
+
+  // TC-OPEN-006 (OPEN-02): a customer can hold accounts in different currencies simultaneously
+  test('TC-OPEN-006: a customer can have accounts in different currencies', async ({ page }) => {
+    const customerLoginPage = new CustomerLoginPage(page);
+    const initialAccountPage = await customerLoginPage.loginAsCustomer('Albus Dumbledore');
+    const accountsBefore = await initialAccountPage.accountSelect.locator('option').count();
+
+    const openAccountPage = new OpenAccountPage(page);
+    await openAccountPage.goto();
+    await openAccountPage.selectCustomer('Albus Dumbledore');
+    await openAccountPage.selectCurrency('Rupee');
+    const dialogMessage = await openAccountPage.process();
+    expect(dialogMessage).toMatch(/Account created successfully/);
+
+    await customerLoginPage.goto();
+    const accountPage = await customerLoginPage.loginAsCustomer('Albus Dumbledore');
+    const optionCount = await accountPage.accountSelect.locator('option').count();
+    expect(optionCount).toBe(accountsBefore + 1);
+
+    const currencies = new Set<string>();
+    for (let i = 0; i < optionCount; i++) {
+      await accountPage.accountSelect.selectOption({ index: i });
+      currencies.add((await accountPage.currencyValue.textContent()) ?? '');
+    }
+    expect(currencies.size).toBeGreaterThan(1);
+  });
 });

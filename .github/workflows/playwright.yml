@@ -16,6 +16,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set run timestamp
+        run: echo "RUN_STAMP=$(date -u +'%Y%m%d-%H%M%S')-UTC" >> "$GITHUB_ENV"
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -31,11 +34,25 @@ jobs:
       - name: Run Playwright tests
         run: npm run test:e2e
 
+      - name: Write run summary
+        if: always()
+        run: |
+          {
+            echo "### Playwright test run"
+            echo ""
+            echo "- **Date/time (UTC):** $(date -u +'%Y-%m-%d %H:%M:%S')"
+            echo "- **Triggered by:** ${{ github.actor }}"
+            echo "- **Branch:** ${{ github.ref_name }}"
+            echo "- **Commit:** ${{ github.sha }}"
+            echo ""
+            echo "Download the \`playwright-report-${{ env.RUN_STAMP }}\` artifact below and open \`index.html\` for the full results."
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ env.RUN_STAMP }}
           path: playwright-report/
           retention-days: 14
 
@@ -43,6 +60,6 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: test-results-${{ env.RUN_STAMP }}
           path: test-results/
           retention-days: 14

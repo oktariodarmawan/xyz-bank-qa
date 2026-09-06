@@ -108,4 +108,32 @@ test.describe('Withdrawl', () => {
     await expect(accountPage.withdrawFailureMessage).toBeVisible();
     expect(await accountPage.getBalance()).toBe(0);
   });
+
+  // TC-WD-008 (WD-04): non-numeric withdrawal input is rejected
+  test('TC-WD-008: non-numeric amount is rejected', async ({ page }) => {
+    const customerLoginPage = new CustomerLoginPage(page);
+    const accountPage = await customerLoginPage.loginAsCustomer('Neville Longbottom');
+    const startingBalance = await accountPage.getBalance();
+
+    await accountPage.openWithdrawForm();
+    await accountPage.withdrawAmountInput.pressSequentially('xyz');
+    await expect(accountPage.withdrawAmountInput).toHaveValue('');
+    await accountPage.withdrawSubmitButton.click();
+
+    await expect(accountPage.withdrawSuccessMessage).toBeHidden();
+    expect(await accountPage.getBalance()).toBe(startingBalance);
+  });
+
+  // TC-WD-009 (WD-07): a withdrawal of 0 leaves the balance unchanged
+  test('TC-WD-009: withdrawal of 0 is not processed', async ({ page }) => {
+    const customerLoginPage = new CustomerLoginPage(page);
+    const accountPage = await customerLoginPage.loginAsCustomer('Ron Weasly');
+    const startingBalance = await accountPage.getBalance();
+
+    await accountPage.openWithdrawForm();
+    await accountPage.attemptWithdraw('0');
+
+    await expect(accountPage.withdrawSuccessMessage).toBeHidden();
+    expect(await accountPage.getBalance()).toBe(startingBalance);
+  });
 });

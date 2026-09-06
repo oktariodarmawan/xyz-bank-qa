@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { HomePage } from './pages/HomePage.js';
 import { CustomerLoginPage } from './pages/CustomerLoginPage.js';
+import { ManagerPage } from './pages/ManagerPage.js';
 
 // Module: Landing Page (TC-LOGIN-*)
 test.describe('Landing Page', () => {
@@ -20,6 +21,19 @@ test.describe('Landing Page', () => {
     const homePage = new HomePage(page);
     const customerLoginPage = new CustomerLoginPage(page);
     await customerLoginPage.loginAsCustomer('Harry Potter');
+
+    await homePage.goHome();
+
+    await expect(page).toHaveURL(/#\/login$/);
+    await expect(homePage.customerLoginButton).toBeVisible();
+    await expect(homePage.managerLoginButton).toBeVisible();
+  });
+
+  // TC-LOGIN-003 (LOGOUT-02): Home button returns to the home page from the manager area
+  test('TC-LOGIN-003: Home button returns to the home page from the manager area', async ({ page }) => {
+    const homePage = new HomePage(page);
+    const managerPage = new ManagerPage(page);
+    await managerPage.goto();
 
     await homePage.goHome();
 
