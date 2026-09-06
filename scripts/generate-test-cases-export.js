@@ -5,6 +5,7 @@ const path = require('path');
 const ExcelJS = require('exceljs');
 
 const DIR = path.join(__dirname, '..', 'manual-test-cases');
+const EXCEL_DIR = path.join(__dirname, '..', 'manual-test-cases-excel');
 const COLUMNS = [
   'Test Case ID',
   'Test Description',
@@ -118,7 +119,8 @@ function main() {
     else if (actual.startsWith('Pass')) actualCell.font = { color: { argb: 'FF15803D' } };
   }
 
-  const xlsxPath = path.join(DIR, 'XYZ-Bank-Test-Cases.xlsx');
+  fs.mkdirSync(EXCEL_DIR, { recursive: true });
+  const xlsxPath = path.join(EXCEL_DIR, 'XYZ-Bank-Test-Cases.xlsx');
   workbook.xlsx.writeFile(xlsxPath).then(() => {
     console.log(`Wrote ${allRows.length} rows to ${xlsxPath}`);
   });
