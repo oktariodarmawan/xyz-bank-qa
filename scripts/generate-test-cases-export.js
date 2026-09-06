@@ -73,7 +73,6 @@ function main() {
   // --- XLSX export ---
   const workbook = new ExcelJS.Workbook();
   workbook.creator = 'XYZ Bank QA test suite';
-  workbook.created = new Date();
 
   const sheet = workbook.addWorksheet('Test Cases', {
     views: [{ state: 'frozen', ySplit: 1 }],
