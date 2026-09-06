@@ -177,8 +177,9 @@ Module 7 — Bank Manager: Open Account,TC-OPEN-006,A customer can hold accounts
 3. Compare the running balance shown after each step against manual arithmetic.","Balance after each operation exactly matches starting balance + deposits − withdrawals, with no drift.",Pass — automated (2026-09-06),High,Automated — tests/14-banking.spec.ts
 "Module 9 — Data persistence, integrity, and unauthorised access",TC-PERS-006,No data inconsistency when switching between two different customers in the same browser,No active session,"1. Log in as Customer A, note balance.
 2. Log out.
-3. Log in as Customer B, note balance.
-4. Log back in as Customer A.",Customer A's balance after step 4 matches step 1 (unaffected by Customer B's session in between); no cross-contamination of account data.,Not executed — pending manual QA,Medium,Candidate — extend tests/11-access-and-persistence.spec.ts with a second customer
+3. Log in as Customer B, deposit a known amount.
+4. Log out.
+5. Log back in as Customer A.",Customer A's balance after step 5 matches step 1 (unaffected by Customer B's session in between); no cross-contamination of account data.,Pass — automated (2026-09-06),Medium,"Automated — tests/11-access-and-persistence.spec.ts (""no data inconsistency when switching between two different customers"")"
 "Module 9 — Data persistence, integrity, and unauthorised access",TC-PERS-007,A manager-added customer persists after a page refresh (DATA-02),Navigated as Bank Manager,"1. Add a new customer.
 2. Confirm it appears in the Customers list.
 3. Refresh the page.

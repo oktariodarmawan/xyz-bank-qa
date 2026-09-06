@@ -7,7 +7,7 @@ Manual and automated test coverage for the [XYZ Bank demo application](https://w
 | Path | Contents |
 |---|---|
 | [`manual-test-cases/`](manual-test-cases/) | 97 manual test cases across 11 modules (login/role selection, account overview, deposit, withdraw, transactions, add customer, open account, customers list, data persistence/access control, responsive/cross-browser, usability/accessibility). Start at [`manual-test-cases/README.md`](manual-test-cases/README.md). Spreadsheet exports: [`manual-test-cases/XYZ-Bank-Test-Cases.xlsx`](manual-test-cases/XYZ-Bank-Test-Cases.xlsx) (Excel) and [`manual-test-cases/manual-test-cases-export.csv`](manual-test-cases/manual-test-cases-export.csv) (CSV), both regenerated from the module files with `npm run export:test-cases`. |
-| [`tests/`](tests/) | 83 automated Playwright test cases (93 executions once cross-browser runs are counted), numbered `01-`–`15-` to match the manual test case module order, plus a Page Object Model under `tests/pages/`. |
+| [`tests/`](tests/) | 84 automated Playwright test cases (94 executions once cross-browser runs are counted), numbered `01-`–`15-` to match the manual test case module order, plus a Page Object Model under `tests/pages/`. |
 | [`playwright.config.ts`](playwright.config.ts) | Test runner configuration — target URL, browsers, reporters, trace/screenshot/video settings. |
 
 ## Tech stack
@@ -82,7 +82,7 @@ To run it:
 ## Test coverage at a glance
 
 - **Manual test cases:** 97, across 11 modules — see [`manual-test-cases/README.md`](manual-test-cases/README.md) for the full breakdown and the column legend (Test Case ID, Description, Preconditions, Steps, Expected Result, Actual Result, Priority, Automation Feasibility).
-- **Automated test cases:** 83 unique scenarios (93 executions with cross-browser multiplication), covering login/role selection, account overview, deposit, withdraw, transactions, add customer, open account, customers list search/sort/delete, data persistence, unauthorised access, responsive layout (3 viewports), and cross-browser smoke (Chromium/Firefox/WebKit).
+- **Automated test cases:** 84 unique scenarios (94 executions with cross-browser multiplication), covering login/role selection, account overview, deposit, withdraw, transactions, add customer, open account, customers list search/sort/delete, data persistence, unauthorised access, responsive layout (3 viewports), and cross-browser smoke (Chromium/Firefox/WebKit).
 - **Cross-browser note:** the suite runs Chromium, Firefox, and WebKit. WebKit approximates a non-Chromium engine but is not literally Microsoft Edge — a deliberate substitution, not an oversight.
 
 ## Known application gaps

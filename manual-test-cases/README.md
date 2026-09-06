@@ -43,8 +43,7 @@ Priority, Automation Feasibility.**
 
 ## Test totals
 
-97 test cases across 11 modules: 80 automated, 16 manual-only, 1 candidate for future
-automation (TC-PERS-006).
+97 test cases across 11 modules: 81 automated, 16 manual-only, 0 candidates.
 
 ## Known application gaps
 

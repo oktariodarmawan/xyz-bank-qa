@@ -41,6 +41,20 @@ test.describe('data persistence', () => {
     await transactionsPage.expectEntry('Credit', 45);
   });
 
+  test('no data inconsistency when switching between two different customers', async ({ page }) => {
+    const customerLoginPage = new CustomerLoginPage(page);
+    const accountPageA = await customerLoginPage.loginAsCustomer('Harry Potter');
+    const balanceABefore = await accountPageA.getBalance();
+
+    const loginAfterA = await accountPageA.logout();
+    const accountPageB = await loginAfterA.loginAsCustomer('Ron Weasly');
+    await accountPageB.deposit(30);
+
+    const loginAfterB = await accountPageB.logout();
+    const accountPageAAgain = await loginAfterB.loginAsCustomer('Harry Potter');
+    expect(await accountPageAAgain.getBalance()).toBe(balanceABefore);
+  });
+
   test('a newly added customer persists after a page refresh', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();
