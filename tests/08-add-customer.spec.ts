@@ -1,9 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { AddCustomerPage } from './pages/AddCustomerPage.js';
 
-// Module: Add Customer (TC-ADD-*)
 test.describe('Add Customer', () => {
-  // TC-ADD-001: adding a customer with valid data confirms success with a new customer id
   test('TC-ADD-001: add a customer with valid data', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();
@@ -16,7 +14,6 @@ test.describe('Add Customer', () => {
     await managerPage.expectCustomerListed(uniqueName);
   });
 
-  // TC-ADD-002: submitting with all fields empty is blocked by required-field validation
   test('TC-ADD-002: all fields empty is not submitted', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();
@@ -33,7 +30,6 @@ test.describe('Add Customer', () => {
     expect(dialogSeen).toBe(false);
   });
 
-  // TC-ADD-003: submitting without a Post Code is blocked by required-field validation
   test('TC-ADD-003: missing Post Code is not submitted', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();
@@ -50,10 +46,7 @@ test.describe('Add Customer', () => {
     expect(dialogSeen).toBe(false);
   });
 
-  // TC-ADD-004: adding a duplicate customer
-  // Observed rule on the live app: an exact duplicate (same first name, last name, AND post
-  // code as an existing customer) is rejected with "Please check the details. Customer may
-  // be duplicate." — a same name with a different post code is not treated as a duplicate.
+  // A duplicate is only rejected when first name, last name, AND post code all match.
   test('TC-ADD-004: an exact duplicate customer is rejected', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();
@@ -70,8 +63,6 @@ test.describe('Add Customer', () => {
     await expect(page.locator('table tbody tr', { hasText: firstName })).toHaveCount(1);
   });
 
-  // TC-ADD-005: numbers/special characters in the name
-  // Observed rule on the live app: the name fields accept any characters — no validation rejects them.
   test('TC-ADD-005: name with numbers and special characters is accepted', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();
@@ -85,8 +76,6 @@ test.describe('Add Customer', () => {
     await managerPage.expectCustomerListed(firstName);
   });
 
-  // TC-ADD-006: letters in Post Code
-  // Observed rule on the live app: Post Code accepts alphanumeric input — digits are not enforced.
   test('TC-ADD-006: Post Code with letters is accepted', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();
@@ -97,7 +86,6 @@ test.describe('Add Customer', () => {
     expect(dialogMessage).toContain('successfully');
   });
 
-  // TC-ADD-007: a very long name is accepted without breaking the layout
   test('TC-ADD-007: a very long first name is handled without breaking the page', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();
@@ -110,8 +98,6 @@ test.describe('Add Customer', () => {
     await expect(page.locator('table')).toBeVisible();
   });
 
-  // TC-ADD-008: leading/trailing spaces in the name
-  // Observed rule on the live app: the name is stored trimmed of leading/trailing spaces.
   test('TC-ADD-008: leading/trailing spaces are trimmed from the name', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();

@@ -16,8 +16,7 @@ export class CustomerLoginPage {
 
   async goto() {
     await this.page.goto('#/customer');
-    // The live app's Angular bootstrap can outlast the `load` event goto() waits for,
-    // so #userSelect isn't always visible yet; reload once before giving up.
+    // Angular bootstrap can outlast goto()'s load event; reload once if #userSelect isn't up yet.
     const appeared = await this.userSelect.waitFor({ state: 'visible', timeout: 10000 }).then(() => true).catch(() => false);
     if (!appeared) {
       await this.page.reload();
@@ -27,9 +26,7 @@ export class CustomerLoginPage {
 
   async selectCustomer(customer: string) {
     await this.userSelect.selectOption({ label: customer });
-    // Occasionally observed on the live app: selectOption resolves but the Angular model
-    // doesn't pick it up (the select silently stays on the blank default), which then leaves
-    // the Login button permanently hidden. Retry once if the Login button hasn't appeared.
+    // selectOption occasionally doesn't stick (select stays on the blank default); retry once.
     const loggedIn = await this.loginButton.waitFor({ state: 'visible', timeout: 3000 }).then(() => true).catch(() => false);
     if (!loggedIn) {
       await this.userSelect.selectOption({ label: customer });

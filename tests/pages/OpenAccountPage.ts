@@ -15,17 +15,12 @@ export class OpenAccountPage {
     this.processButton = page.getByRole('button', { name: 'Process' });
   }
 
-  /**
-   * Deliberately does not hash-jump straight to '#/manager/openAccount': on the live app the
-   * customer dropdown here only gets populated when this view is reached by clicking the
-   * "Open Account" tab from '#/manager' — a direct hash navigation renders the form with an
-   * empty customer list (observed while building this suite).
-   */
+  // Reached via the manager nav tab, not a direct hash jump: a direct '#/manager/openAccount'
+  // navigation renders the customer dropdown empty.
   async goto() {
     await this.page.goto('#/manager');
     await this.page.getByRole('button', { name: 'Open Account' }).click();
-    // <option> elements inside a native, closed <select> aren't reported as "visible" by
-    // Playwright even once populated, so wait on the option count instead of visibility.
+    // A closed <select>'s <option>s aren't reported "visible" by Playwright, so check count instead.
     await expect(this.customerSelect.locator('option')).not.toHaveCount(0);
   }
 
@@ -37,7 +32,7 @@ export class OpenAccountPage {
     await this.currencySelect.selectOption(currency);
   }
 
-  /** Clicks Process and returns the confirmation alert's text, or '' if no dialog appeared (blocked submission). */
+  // Returns the confirmation alert's text, or '' if submission was blocked (no dialog).
   async process(): Promise<string> {
     let message = '';
     const handled = this.page.waitForEvent('dialog', { timeout: 3000 }).then(async dialog => {

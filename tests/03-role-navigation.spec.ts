@@ -5,7 +5,6 @@ import { ManagerPage } from './pages/ManagerPage.js';
 import { AccountPage } from './pages/AccountPage.js';
 
 test.describe('role navigation', () => {
-  // TC-003
   test('manager role navigation exposes manager controls and hides customer controls', async ({ page }) => {
     const homePage = new HomePage(page);
     const managerPage = new ManagerPage(page);
@@ -23,7 +22,6 @@ test.describe('role navigation', () => {
     await expect(accountPage.depositButton).toHaveCount(0);
   });
 
-  // TC-002 (manager-controls-unavailable half of the case)
   test('customer role navigation hides manager controls', async ({ page }) => {
     const homePage = new HomePage(page);
     const managerPage = new ManagerPage(page);
@@ -37,7 +35,6 @@ test.describe('role navigation', () => {
     await expect(managerPage.customersNavButton).toHaveCount(0);
   });
 
-  // TC-004
   test('customer login validation rejects an empty selection', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     await customerLoginPage.goto();

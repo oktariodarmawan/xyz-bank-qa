@@ -5,10 +5,8 @@ import { AccountPage } from './pages/AccountPage.js';
 import { AddCustomerPage } from './pages/AddCustomerPage.js';
 
 test.describe('data persistence', () => {
-  // TC-014
-  // KNOWN FAILURE: a full page refresh keeps the logged-in customer's route/identity
-  // but resets balance and transaction history to the seed data, instead of preserving
-  // them as expected. This test documents the gap.
+  // KNOWN FAILURE: a page refresh keeps the customer logged in but resets balance and
+  // transaction history to the seed data instead of preserving them.
   test('customer data persists after a page refresh', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Neville Longbottom');
@@ -25,7 +23,6 @@ test.describe('data persistence', () => {
     await transactionsPage.expectEntry('Credit', 60);
   });
 
-  // TC-015
   test('customer data persists after logout and login', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Neville Longbottom');
@@ -44,7 +41,6 @@ test.describe('data persistence', () => {
     await transactionsPage.expectEntry('Credit', 45);
   });
 
-  // TC-016b (DATA-02): a manager-added customer persists after a page refresh
   test('a newly added customer persists after a page refresh', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();
@@ -61,9 +57,6 @@ test.describe('data persistence', () => {
 });
 
 test.describe('unauthorized feature access', () => {
-  // TC-016
-  // Verifies the app does enforce a route guard here: a customer session navigating
-  // directly to the manager route must not see manager-only controls.
   test('customer session cannot reach manager controls by direct navigation', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     await customerLoginPage.loginAsCustomer('Hermoine Granger');
@@ -83,7 +76,6 @@ test.describe('unauthorized feature access', () => {
     const accountPage = new AccountPage(page);
     await page.goto('#/account');
 
-    // No customer is bound in a manager session, so no real account number or balance should render.
     await expect(accountPage.accountNumberValue).not.toHaveText(/^\d+$/);
     await expect(accountPage.balance).not.toHaveText(/^\d+$/);
   });

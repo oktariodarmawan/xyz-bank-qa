@@ -3,9 +3,7 @@ import { CustomersPage } from './pages/CustomersPage.js';
 import { AddCustomerPage } from './pages/AddCustomerPage.js';
 import { CustomerLoginPage } from './pages/CustomerLoginPage.js';
 
-// Module: Customers (TC-CUST-*)
 test.describe('Customers', () => {
-  // TC-CUST-001: the customer table shows First Name, Last Name, Post Code, Account Number, and Delete
   test('TC-CUST-001: the customer list is fully displayed', async ({ page }) => {
     const customersPage = new CustomersPage(page);
     await customersPage.goto();
@@ -20,7 +18,6 @@ test.describe('Customers', () => {
     await expect(customersPage.rows.first().getByRole('button', { name: 'Delete' })).toBeVisible();
   });
 
-  // TC-CUST-002: searching filters the table to matching rows only
   test('TC-CUST-002: search filters by name', async ({ page }) => {
     const customersPage = new CustomersPage(page);
     await customersPage.goto();
@@ -31,7 +28,6 @@ test.describe('Customers', () => {
     await expect(customersPage.rows.first()).toContainText('Harry');
   });
 
-  // TC-CUST-003: a search with no matches leaves the table empty, without error
   test('TC-CUST-003: search with no matching result shows an empty table', async ({ page }) => {
     const customersPage = new CustomersPage(page);
     await customersPage.goto();
@@ -41,7 +37,6 @@ test.describe('Customers', () => {
     await expect(customersPage.rows).toHaveCount(0);
   });
 
-  // TC-CUST-004: search results are consistent regardless of capitalisation
   test('TC-CUST-004: search is not case-sensitive', async ({ page }) => {
     const customersPage = new CustomersPage(page);
     await customersPage.goto();
@@ -56,8 +51,6 @@ test.describe('Customers', () => {
     expect(lowerCaseCount).toBeGreaterThan(0);
   });
 
-  // TC-CUST-005: deleting a customer removes their row from the table
-  // Uses a disposable customer created for this test — never a seed customer other tests rely on.
   test('TC-CUST-005: delete a customer', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();
@@ -73,7 +66,6 @@ test.describe('Customers', () => {
     await customersPage.expectCustomerHidden(disposableName);
   });
 
-  // TC-CUST-006: a deleted customer no longer appears in the Customer Login dropdown
   test('TC-CUST-006: a deleted customer disappears from the login dropdown', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();
@@ -92,7 +84,6 @@ test.describe('Customers', () => {
     expect(optionLabels).not.toContain(disposableName);
   });
 
-  // TC-CUST-007: clicking the First Name header sorts the list, and clicking again reverses it
   test('TC-CUST-007: sort by the First Name column', async ({ page }) => {
     const customersPage = new CustomersPage(page);
     await customersPage.goto();
@@ -105,8 +96,6 @@ test.describe('Customers', () => {
 
     const sortedAscending = [...firstClickOrder].sort((a, b) => a.localeCompare(b));
     const sortedDescending = [...sortedAscending].reverse();
-    // One of the two clicks must match ascending order and the other descending —
-    // the live app doesn't document which click is which, so this checks sortedness itself.
     const firstIsSorted = JSON.stringify(firstClickOrder) === JSON.stringify(sortedAscending)
       || JSON.stringify(firstClickOrder) === JSON.stringify(sortedDescending);
     const secondIsSorted = JSON.stringify(secondClickOrder) === JSON.stringify(sortedAscending)
@@ -117,7 +106,6 @@ test.describe('Customers', () => {
     expect(firstClickOrder).not.toEqual(secondClickOrder);
   });
 
-  // TC-CUST-008: a newly added customer appears in the Customers list
   test('TC-CUST-008: a new customer appears in the list', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();

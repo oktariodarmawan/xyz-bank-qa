@@ -30,8 +30,7 @@ export class AccountPage {
     this.accountNumberValue = page.locator('.center strong').first();
     this.balance = page.locator('.center strong').nth(1);
     this.currencyValue = page.locator('.center strong').nth(2);
-    // Exact + first(): once the deposit form is open, its submit button is also named
-    // exactly "Deposit", making the plain role query ambiguous between the tab and the form.
+    // first(): the deposit form's own submit button is also named exactly "Deposit".
     this.depositButton = page.getByRole('button', { name: 'Deposit', exact: true }).first();
     this.withdrawButton = page.getByRole('button', { name: 'Withdrawl' });
     this.transactionsButton = page.getByRole('button', { name: 'Transactions' });
@@ -57,17 +56,12 @@ export class AccountPage {
     return Number(await this.balance.textContent());
   }
 
-  /**
-   * Switching tabs (Deposit/Withdrawl/Transactions) does not swap the form in the DOM
-   * synchronously with the click, so callers must wait for this tab's own form label
-   * before interacting with it — otherwise they can end up filling the previous tab's form.
-   */
+  // Wait for this tab's form label, since the click doesn't swap the DOM synchronously.
   async openDepositForm() {
     await this.depositButton.click();
     await this.page.getByText('Amount to be Deposited :').waitFor();
   }
 
-  /** Fills and submits the deposit form without asserting the outcome, so invalid inputs can be exercised. */
   async attemptDeposit(amount: string) {
     await this.depositAmountInput.fill(amount);
     await this.depositSubmitButton.click();
@@ -88,7 +82,6 @@ export class AccountPage {
     await this.withdrawAmountInput.fill(amount);
   }
 
-  /** Sets and submits the withdrawal form without asserting the outcome, so invalid inputs can be exercised. */
   async attemptWithdraw(amount: string) {
     await this.setWithdrawAmount(amount);
     await this.withdrawSubmitButton.click();

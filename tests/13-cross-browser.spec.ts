@@ -3,16 +3,14 @@ import { HomePage } from './pages/HomePage.js';
 import { CustomerLoginPage } from './pages/CustomerLoginPage.js';
 import { AddCustomerPage } from './pages/AddCustomerPage.js';
 
-// TC-018: this file is run against chromium, firefox, and webkit (see playwright.config.ts)
-// to smoke-test navigation, forms, dialogs, and balance updates across browser engines.
 test.describe('cross-browser smoke', () => {
-  test('homepage role choices are usable', async ({ page }) => { // TC-001
+  test('homepage role choices are usable', async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
     await homePage.expectLoaded();
   });
 
-  test('customer login validation rejects an empty selection', async ({ page }) => { // TC-004
+  test('customer login validation rejects an empty selection', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     await customerLoginPage.goto();
     await expect(customerLoginPage.loginButton).toBeHidden();
@@ -22,7 +20,7 @@ test.describe('cross-browser smoke', () => {
     await expect(accountPage.welcomeMessage('Hermoine Granger')).toBeVisible();
   });
 
-  test('valid deposit increases the balance', async ({ page }) => { // TC-007
+  test('valid deposit increases the balance', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Harry Potter');
     const startingBalance = await accountPage.getBalance();
@@ -31,7 +29,7 @@ test.describe('cross-browser smoke', () => {
     expect(await accountPage.getBalance()).toBe(startingBalance + 25);
   });
 
-  test('valid withdrawal decreases the balance', async ({ page }) => { // TC-009
+  test('valid withdrawal decreases the balance', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Ron Weasly');
     await accountPage.deposit(50);
@@ -41,7 +39,7 @@ test.describe('cross-browser smoke', () => {
     expect(await accountPage.getBalance()).toBe(balanceAfterDeposit - 20);
   });
 
-  test('manager can add a customer', async ({ page }) => { // TC-012
+  test('manager can add a customer', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();
     const uniqueName = `CrossBrowser${Date.now()}`;

@@ -2,9 +2,7 @@ import { test, expect } from '@playwright/test';
 import { CustomerLoginPage } from './pages/CustomerLoginPage.js';
 import { OpenAccountPage } from './pages/OpenAccountPage.js';
 
-// Module: Transactions (TC-TXN-*)
 test.describe('Transactions', () => {
-  // TC-TXN-001: a deposit is recorded as Credit with the correct amount and a timestamp
   test('TC-TXN-001: a deposit is recorded as Credit', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Ron Weasly');
@@ -14,13 +12,8 @@ test.describe('Transactions', () => {
     await transactionsPage.expectEntry('Credit', 77);
   });
 
-  // TC-TXN-002: a withdrawal is recorded as Debit with the correct amount
-  // KNOWN LIMITATION: the live app's Transactions view can permanently render empty for an
-  // account after a deposit+withdraw combo in the same session (confirmed independently while
-  // building this suite, and already documented in banking.spec.ts) — re-navigating does not
-  // recover it. Depositing only when the balance is actually too low to withdraw from (rather
-  // than unconditionally) reduces how often this test hits that combination, but cannot avoid
-  // it entirely; if this fails at the transaction-history assertion, re-run it.
+  // Known live-app flake: the Transactions view can render an empty table right after a
+  // deposit+withdraw in the same session. Re-run if this fails on the history assertion.
   test('TC-TXN-002: a withdrawal is recorded as Debit', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Albus Dumbledore');
@@ -33,13 +26,6 @@ test.describe('Transactions', () => {
     await transactionsPage.expectEntry('Debit', 35);
   });
 
-  // TC-TXN-003: the Reset button is expected to clear the transaction history
-  // Observed rule on the live app: Reset lives inside a date-range filter panel gated by
-  // `ng-show="showDate"`, and whether it's shown does not track anything this suite controls
-  // (not transaction volume, not a fresh vs. reused account — observed inconsistent results
-  // for both while building this suite). Rather than assert a specific visibility outcome,
-  // this exercises whichever state the app is actually in: if Reset is reachable, using it
-  // must actually clear the history; if it isn't, the history must remain intact.
   test('TC-TXN-003: Reset clears history when reachable, otherwise history stays intact', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Ron Weasly');
@@ -56,7 +42,6 @@ test.describe('Transactions', () => {
     }
   });
 
-  // TC-TXN-004: the Back button returns to the customer account page
   test('TC-TXN-004: Back button returns to the account page', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Ron Weasly');
@@ -68,9 +53,7 @@ test.describe('Transactions', () => {
     await expect(accountPage.balance).toHaveText(/^\d+(\.\d+)?$/);
   });
 
-  // TC-TXN-005: transactions performed in sequence are recorded in that same order with valid timestamps
-  // Same known live-app limitation as TC-TXN-002 (see its comment) — this does a deposit+withdraw
-  // combo too, so it can occasionally hit the same unrecoverable empty-table bug and need a re-run.
+  // Shares the TC-TXN-002 live-app flake risk.
   test('TC-TXN-005: transaction order and time are consistent', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Albus Dumbledore');
@@ -80,7 +63,7 @@ test.describe('Transactions', () => {
 
     const transactionsPage = await accountPage.goToTransactions();
     const allRows = await transactionsPage.allRowsText();
-    // The live app renders rows oldest-first, so the 3 transactions just made are the last 3 rows.
+    // Rows render oldest-first, so the 3 transactions just made are the last 3 rows.
     const lastThree = allRows.slice(-3);
 
     expect(lastThree.map(row => [row[1], row[2]])).toEqual([
@@ -96,10 +79,8 @@ test.describe('Transactions', () => {
     expect(timestamps[1]).toBeLessThanOrEqual(timestamps[2]);
   });
 
-  // TC-TXN-006: an account with a high transaction volume (~200+ rows) loads without error
   test('TC-TXN-006: an account with a high transaction volume loads', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
-    // First customer, first (default) account in the seeded data — carries the large seed history.
     const accountPage = await customerLoginPage.loginAsCustomer('Hermoine Granger');
     await expect(accountPage.accountSelect).toHaveValue('number:1001');
 
@@ -109,18 +90,16 @@ test.describe('Transactions', () => {
     expect(rowCount).toBeGreaterThan(100);
   });
 
-  // TC-TXN-007 (TXN-06): transactions are specific to the selected account
   test('TC-TXN-007: transactions are specific to the selected account', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Hermoine Granger');
 
     await accountPage.selectAccount('1002');
-    const marker = 137; // an amount unlikely to already exist in the seed history
+    const marker = 137;
     await accountPage.deposit(marker);
 
-    // 1001 is the seeded account with a large, reliably-rendered transaction history
-    // (see TC-TXN-006) — checking against it avoids the ambiguity of an account whose
-    // table might legitimately have too little history to tell "empty" from "not leaked".
+    // 1001 has a large, reliably non-empty history (see TC-TXN-006), so an absent
+    // marker there is a real signal rather than an ambiguous empty table.
     await accountPage.selectAccount('1001');
     const transactionsPage = await accountPage.goToTransactions();
     const rows = await transactionsPage.allRowsText();
@@ -128,7 +107,6 @@ test.describe('Transactions', () => {
     expect(leaked).toBe(false);
   });
 
-  // TC-TXN-008 (TXN-07): a freshly opened account with no transactions shows an empty history
   test('TC-TXN-008: an account with no transactions shows an empty history', async ({ page }) => {
     const openAccountPage = new OpenAccountPage(page);
     await openAccountPage.goto();

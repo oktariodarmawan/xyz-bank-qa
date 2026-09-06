@@ -3,7 +3,6 @@ import { CustomerLoginPage } from './pages/CustomerLoginPage.js';
 import { AddCustomerPage } from './pages/AddCustomerPage.js';
 
 test.describe('deposit validation', () => {
-  // TC-008 (empty, zero, negative, decimal, alphabetic sub-cases)
   test('rejects empty, zero, negative, decimal, and alphabetic deposit amounts', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Harry Potter');
@@ -23,10 +22,7 @@ test.describe('deposit validation', () => {
     expect(await accountPage.getBalance()).toBe(startingBalance);
   });
 
-  // TC-008 (excessively large amount sub-case)
-  // KNOWN FAILURE: the live app currently accepts amounts of any size instead of
-  // rejecting excessively large deposits, so this test documents the gap against
-  // the TEST-PLAN.md expectation until the app enforces a sane upper bound.
+  // KNOWN FAILURE: the live app accepts deposits of any size; no upper-bound validation exists.
   test('rejects an excessively large deposit amount', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Ron Weasly');
@@ -40,7 +36,6 @@ test.describe('deposit validation', () => {
 });
 
 test.describe('withdrawal validation', () => {
-  // TC-010
   test('rejects a withdrawal over the available balance', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Albus Dumbledore');
@@ -55,7 +50,6 @@ test.describe('withdrawal validation', () => {
 });
 
 test.describe('add customer validation', () => {
-  // TC-013 (missing required fields sub-case)
   test('rejects submission with missing required fields', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();
@@ -70,10 +64,7 @@ test.describe('add customer validation', () => {
     expect(dialogSeen).toBe(false);
   });
 
-  // TC-013 (invalid post code characters sub-case)
-  // KNOWN FAILURE: the live app does not validate the Post Code format and
-  // currently accepts alphabetic values, so this test documents the gap
-  // against the TEST-PLAN.md expectation until format validation is added.
+  // KNOWN FAILURE: the live app does not validate Post Code format and accepts letters.
   test('rejects an invalid (non-numeric) post code', async ({ page }) => {
     const addCustomerPage = new AddCustomerPage(page);
     await addCustomerPage.goto();

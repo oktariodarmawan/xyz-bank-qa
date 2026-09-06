@@ -13,7 +13,6 @@ async function hasHorizontalOverflow(page: Page): Promise<boolean> {
   return page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
 }
 
-// TC-017
 for (const viewport of VIEWPORTS) {
   test.describe(`responsive layout at ${viewport.name} (${viewport.width}x${viewport.height})`, () => {
     test.use({ viewport: { width: viewport.width, height: viewport.height } });

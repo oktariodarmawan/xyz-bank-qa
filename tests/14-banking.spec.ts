@@ -31,11 +31,7 @@ test.describe('customer banking flows', () => {
     await expect(accountPage.accountNumberValue).toHaveText('1003');
   });
 
-  // NOTE: the live site's Transactions view intermittently renders a completely empty table
-  // (even the seed rows) right after a deposit+withdraw in the same session. This reproduces
-  // ~50-70% of the time regardless of wait strategy, and neither the in-app Reset button nor
-  // retrying the navigation recovers it — it appears to be a bug in the live app itself, not
-  // in this test. If this test fails at the transaction-history assertions, re-run it.
+  // Shares the TC-TXN-002 live-app flake risk (see 07-transactions.spec.ts).
   test('customer can deposit, withdraw, and review transaction history', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Hermoine Granger');
