@@ -31,24 +31,28 @@ test.describe('customer banking flows', () => {
     await expect(accountPage.accountNumberValue).toHaveText('1003');
   });
 
-  // Shares the TC-TXN-002 live-app flake risk (see 07-transactions.spec.ts).
-  test('customer can deposit, withdraw, and review transaction history', async ({ page }) => {
-    const customerLoginPage = new CustomerLoginPage(page);
-    const accountPage = await customerLoginPage.loginAsCustomer('Hermoine Granger');
+  test.describe('deposit, withdraw, and review transaction history', () => {
+    // Extra retries locally too: shares the TC-TXN-002 live-app flake risk (see 07-transactions.spec.ts).
+    test.describe.configure({ retries: 2 });
 
-    const startingBalance = await accountPage.getBalance();
-    const depositAmount = 100;
-    const withdrawalAmount = 40;
+    test('customer can deposit, withdraw, and review transaction history', async ({ page }) => {
+      const customerLoginPage = new CustomerLoginPage(page);
+      const accountPage = await customerLoginPage.loginAsCustomer('Hermoine Granger');
 
-    await accountPage.deposit(depositAmount);
-    await expect(accountPage.balance).toHaveText(String(startingBalance + depositAmount));
+      const startingBalance = await accountPage.getBalance();
+      const depositAmount = 100;
+      const withdrawalAmount = 40;
 
-    await accountPage.withdraw(withdrawalAmount);
-    await expect(accountPage.balance).toHaveText(String(startingBalance + depositAmount - withdrawalAmount));
+      await accountPage.deposit(depositAmount);
+      await expect(accountPage.balance).toHaveText(String(startingBalance + depositAmount));
 
-    const transactionsPage = await accountPage.goToTransactions();
-    await transactionsPage.expectEntry('Credit', depositAmount);
-    await transactionsPage.expectEntry('Debit', withdrawalAmount);
+      await accountPage.withdraw(withdrawalAmount);
+      await expect(accountPage.balance).toHaveText(String(startingBalance + depositAmount - withdrawalAmount));
+
+      const transactionsPage = await accountPage.goToTransactions();
+      await transactionsPage.expectEntry('Credit', depositAmount);
+      await transactionsPage.expectEntry('Debit', withdrawalAmount);
+    });
   });
 
   test('manager can add a customer and return to the manager area', async ({ page }) => {

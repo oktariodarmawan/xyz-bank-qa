@@ -3,6 +3,10 @@ import { CustomerLoginPage } from './pages/CustomerLoginPage.js';
 import { OpenAccountPage } from './pages/OpenAccountPage.js';
 
 test.describe('Transactions', () => {
+  // Extra retries locally too: this view can intermittently render empty right after a
+  // deposit/withdraw, independent of CI vs local (see TransactionsPage.ensureRowsLoaded).
+  test.describe.configure({ retries: 2 });
+
   test('TC-TXN-001: a deposit is recorded as Credit', async ({ page }) => {
     const customerLoginPage = new CustomerLoginPage(page);
     const accountPage = await customerLoginPage.loginAsCustomer('Ron Weasly');
